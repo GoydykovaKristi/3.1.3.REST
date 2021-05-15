@@ -10,9 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -33,49 +32,44 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public List<User> getAllUsers() {
-        return userRepository.getAllUsers();
+        return userRepository.findAll();
     }
 
     @Override
-    public void saveUser(User user) {
-       String encryptedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encryptedPassword);
-        userRepository.saveUser(user);
-    }
+    public void saveOrUpdate(User user) {
 
-    @Override
-    public User getUserById(Long id) {
-        return userRepository.getUserById(id);
-    }
-
-    @Override
-    public Role showRole(Long id) {
-        return roleRepository.getRoleById(id);
-    }
-
-    @Override
-    public void updateUser(User user, String[] role) {
-        Set<Role> rol = new HashSet<>();
-        for (String s : role) {
-            if (s.equals("ROLE_ADMIN")) {
-                rol.add(showRole(1L));
-            } else {
-                rol.add(showRole(2L));
-            }
-        }
-        user.setRoles(rol);
-        userRepository.updateUser(user);
+       userRepository.save(user);
     }
 
     @Override
     public void deleteUser(Long id) {
-        userRepository.deleteUser(id);
+        userRepository.deleteById(id);
     }
 
     @Override
-    public User findUserByName(String username) {
-        return userRepository.findUserByName(username);
+    public Optional<User> getUserById(Long id) {
+        return userRepository.findById(id);
     }
 
+    @Override
+    public User findByEmail(String email) {
+
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public User findByUsername(String username) {
+
+        return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public List <Role> getRoleList() {
+        return roleRepository.findAll();
+    }
+
+    public Optional<Role> showRole(Long id) {
+        return roleRepository.findById(id);
+    }
 
 }

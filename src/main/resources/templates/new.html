@@ -29,7 +29,7 @@
     <input type="text" th:field="*{email}" id="email"/>
         <br><br>
     <label>Role:
-            <select multiple size="2" name="select_role" class="form-control" id="exampleFormControlSelect3">
+            <select multiple size="2" name="newRole" class="form-control" id="exampleFormControlSelect3">
                 <option th:each="role : ${allRoles}" th:value="${role.getName()}"
                         th:text="${role.getAuthority() == 'ROLE_ADMIN'} ? 'ROLE_ADMIN' : 'ROLE_USER'"></option>
             </select>

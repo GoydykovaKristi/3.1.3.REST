@@ -3,22 +3,23 @@ package com.kristigoydykova.spring.boot.security.services;
 
 import com.kristigoydykova.spring.boot.security.entities.Role;
 import com.kristigoydykova.spring.boot.security.entities.User;
-
 import java.util.List;
+import java.util.Optional;
+
 
 public interface UserService {
 
     List<User> getAllUsers();
 
-    void saveUser(User user);
-
-    User getUserById(Long id);
-
-    void updateUser(User user, String[] role);
-
-    Role showRole(Long id);
+    void saveOrUpdate(User user);
 
     void deleteUser(Long id);
 
-    User findUserByName(String username3);
+    Optional<User> getUserById(Long id);
+
+    User findByEmail(String email);
+
+    User findByUsername(String username);
+
+    List <Role> getRoleList();
 }
