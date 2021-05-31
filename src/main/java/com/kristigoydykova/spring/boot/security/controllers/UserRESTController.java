@@ -4,28 +4,29 @@ package com.kristigoydykova.spring.boot.security.controllers;
 import com.kristigoydykova.spring.boot.security.entities.User;
 import com.kristigoydykova.spring.boot.security.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 
 
-@Controller
-@RequestMapping("")
-public class UserController {
+@RestController
+@RequestMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
+public class UserRESTController {
+
     private final UserService userService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserRESTController(UserService userService) {
         this.userService = userService;
     }
 
-    @GetMapping("/{id}")
-    public String forUser(Principal principal, Model model){
-        User username = userService.findByUsername(principal.getName());
-        model.addAttribute("user", username);
-        return "user";
+    @GetMapping("")
+    public ResponseEntity<User> getCurrentUser(Principal principal) {
+        return ResponseEntity.ok(userService.findByUsername(principal.getName()));
     }
+
 }

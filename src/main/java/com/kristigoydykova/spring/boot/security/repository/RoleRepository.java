@@ -11,13 +11,5 @@ import java.util.List;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role,Long> {
-//    List<Role> getAllRoles();
-//
-//    void saveRole(Role role);
-//
-//    void updateRole(Role role);
-//
-//    Role getRoleById(long id);
-//
-//    void deleteRole(long id);
+
 }
