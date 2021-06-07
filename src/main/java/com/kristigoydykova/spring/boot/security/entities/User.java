@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -97,7 +98,7 @@ public class User implements UserDetails {
     }
 
     public void setPassword(String password) {
-        this.password = new BCryptPasswordEncoder(12,new SecureRandom()).encode(password);
+        this.password = password;
     }
 
     public String getName() {

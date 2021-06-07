@@ -1,28 +1,20 @@
-$(document).ready(function () {
-    viewUserInfo();
-});
+$(document).ready(refreshCurrentUserTable());
 
-async function viewUserInfo() {
-    fetch("http://localhost:8080/user")
-        .then((res) => res.json())
-        .then((user) => {
-            $(".nav-username").text(user.email);
-            $(".nav-user-roles").text('with roles: ' + user.roles.map(r => r.role.replace('ROLE_', '')).join(', '));
-
-            let tab = "";
-            tab += `
-            <tr>
-            <td> ${user.id}</td>
-            <td> ${user.username}</td>
-            <td> ${user.name}</td>
-            <td> ${user.surname}</td>
-            <td> ${user.age}</td>
-            <td> ${user.email}</td>
-            <td> ${user.roles.map(r => r.role.replace('ROLE_', '')).join(', ')}</td>
-            </tr>`;
-
-            $('#data').append(tab);
+function refreshCurrentUserTable() {
+    $.get(`http://localhost:8080/user/infoUsername/`)
+        .done((currentUser) => {
+            console.log(currentUser)
+            $("#currentUserTableBody")
+                .empty()
+                .append($('<tr>')
+                    .append($('<td>').text(currentUser.id))
+                    .append($('<td>').text(currentUser.username))
+                    .append($('<td>').text(currentUser.name))
+                    .append($('<td>').text(currentUser.surname))
+                    .append($('<td>').text(currentUser.age))
+                    .append($('<td>').text(currentUser.email))
+                    .append($('<td>').text(currentUser.roles.map(item=>item.name.replace('ROLE_', '')).join(', ')))
+                );
         })
 
 }
-

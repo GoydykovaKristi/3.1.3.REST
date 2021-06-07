@@ -14,7 +14,7 @@ import java.security.Principal;
 
 
 @RestController
-@RequestMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping("/user")
 public class UserRESTController {
 
     private final UserService userService;
@@ -24,7 +24,7 @@ public class UserRESTController {
         this.userService = userService;
     }
 
-    @GetMapping("")
+    @GetMapping("/infoUsername")
     public ResponseEntity<User> getCurrentUser(Principal principal) {
         return ResponseEntity.ok(userService.findByUsername(principal.getName()));
     }

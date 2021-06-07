@@ -1,7 +1,9 @@
 package com.kristigoydykova.spring.boot.security.controllers;
 
 
+import com.kristigoydykova.spring.boot.security.entities.Role;
 import com.kristigoydykova.spring.boot.security.entities.User;
+import com.kristigoydykova.spring.boot.security.services.RoleService;
 import com.kristigoydykova.spring.boot.security.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,15 +25,17 @@ import java.util.Optional;
 
 
 @RestController
-@RequestMapping(value = "/admin", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping("/admin")
 public class ForAdminRESTController {
 
     private final UserService userService;
+    private final RoleService roleService;
 
 
     @Autowired
-    public ForAdminRESTController(UserService userService) {
+    public ForAdminRESTController(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
 
     }
 
@@ -40,43 +44,54 @@ public class ForAdminRESTController {
         final List<User> allUsers =  userService.getAllUsers();
 
         return allUsers != null && !allUsers.isEmpty()
-                ? new ResponseEntity<>(allUsers, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                ? ResponseEntity.ok(allUsers)
+                : ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/infoUser")
+    @GetMapping("/infoUsername")
     public ResponseEntity<User> getUser(Principal principal){
         User userByUsername = userService.findByUsername(principal.getName());
 
-        return new ResponseEntity<>(userByUsername, HttpStatus.OK);
+        return ResponseEntity.ok(userByUsername);
     }
 
     @GetMapping("/users/{id}")
     public ResponseEntity<Optional<User>> userById(@PathVariable("id") Long id){
         Optional<User> userById = userService.getUserById(id);
 
-        return new ResponseEntity<>(userById, HttpStatus.OK);
+        return ResponseEntity.ok(userById);
     }
 
-    @PostMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping("/users")
     public ResponseEntity<User> addNewUser(@RequestBody User user){
         userService.saveOrUpdate(user);
 
-        return new ResponseEntity<>(user, HttpStatus.CREATED);
+        return ResponseEntity.ok().build();
     }
 
-    @PutMapping(value = "/users/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/users")
     public ResponseEntity<?> update(@RequestBody User user) {
         userService.saveOrUpdate(user);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @DeleteMapping(value = "/users/{id}")
+    @DeleteMapping("/users/{id}")
     public ResponseEntity<?> delete(@PathVariable(name = "id") Long id) {
         userService.deleteUser(id);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/roles")
+    public ResponseEntity<List<Role>> showAllRoles(){
+        final List<Role> allRoles =  roleService.getAllRoles();
+
+        return allRoles != null && !allRoles.isEmpty()
+                ? ResponseEntity.ok(allRoles)
+                : ResponseEntity.notFound().build();
+    }
+
+
 
 }

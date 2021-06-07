@@ -1,18 +1,3 @@
-$(document).ready(function () {
-    viewUserInfo();
-});
-
-async function viewUserInfo() {
-    fetch("http://localhost:8080/admin/infoUser")
-        .then((res) => res.json())
-        .then((user) => {
-            $(".nav-username").text(user.email);
-            $(".nav-user-roles").text('with roles: ' + user.roles.map(r => r.role.replace('ROLE_', '')).join(', '));
-
-
-        })
-
-}
 
 //------------------ALL-USERS--------------------------------
 
@@ -32,7 +17,7 @@ function getUsers() {
                 <td id="surname${user.id}">${user.surname}</td>
                 <td id="age${user.id}">${user.age}</td>
                 <td id="email${user.id}">${user.email}</td>
-                <td id="roles${user.id}">${user.roles.map(r => r.role.replace('ROLE_','')).join(', ')}</td>
+                <td id="roles${user.id}">${user.roles.map(r => r.name.replace('ROLE_','')).join(', ')}</td>
                 <td>
                 <button class="btn btn-info btn-md" type="button"
                 data-toggle="modal" data-target="#editModal" 
@@ -69,7 +54,7 @@ function fillModal(id) {
 
             document.getElementById('delId').value = user.id;
             document.getElementById('delUsername').value = user.username;
-            document.getElementById('delPassword').value = user.password;
+            // document.getElementById('delPassword').value = user.password;
             document.getElementById('delName').value = user.name;
             document.getElementById('delSurname').value = user.surname;
             document.getElementById('delAge').value = user.age;
@@ -82,8 +67,8 @@ function fillModal(id) {
 //------------------SHOW-User--------------------------------
 
 function showUser() {
-
-    const showUserURL = 'http://localhost:8080/admin/infoUser';
+    //$("#topNav").css("display", "none");
+    const showUserURL = 'http://localhost:8080/admin/infoUsername';
     fetch(showUserURL)
         .then((res) => res.json())
         .then((user) => {
@@ -96,7 +81,7 @@ function showUser() {
                 <td>${user.surname}</td>
                 <td>${user.age}</td>
                 <td>${user.email}</td>
-                <td>${user.roles.map(r => r.role.replace('ROLE_','')).join(', ')}</td>
+                <td>${user.roles.map(r => r.name.replace('ROLE_','')).join(', ')}</td>
             `;
             temp += "<tr>";
             document.getElementById("userTable").innerHTML = temp;
@@ -109,7 +94,7 @@ showUser();
 document.getElementById("newUserForm")
     .addEventListener("submit", newUserForm);
 
-function newUserForm(e){
+async function newUserForm(e){
     e.preventDefault();
 
     let username = document.getElementById("addUsername").value;
@@ -118,7 +103,6 @@ function newUserForm(e){
     let surname = document.getElementById("addSurname").value;
     let age = document.getElementById("addAge").value;
     let email = document.getElementById("addEmail").value;
-
     let roles = selectRole(Array.from(document.getElementById("addRole").selectedOptions)
         .map(r => r.value));
 
@@ -135,7 +119,6 @@ function newUserForm(e){
             surname: surname,
             age: age,
             email: email,
-
             roles: roles
         })
     })
@@ -148,7 +131,7 @@ function newUserForm(e){
 
 //------------------EDIT--------------------------------
 
-function butEdit() {
+async function butEdit() {
 
     let user = {
         id: document.getElementById('id').value,
@@ -158,12 +141,11 @@ function butEdit() {
         surname: document.getElementById('editSurname').value,
         age: document.getElementById('editAge').value,
         email: document.getElementById('editEmail').value,
-
         roles: selectRole(Array.from(document.getElementById("editRole").selectedOptions)
             .map(r => r.value))
     }
 
-    fetch("http://localhost:8080/admin/users" + id, {
+    let response = await fetch("http://localhost:8080/admin/users", {
         method: "PUT",
         headers: {
             'Accept': 'application/json',
@@ -171,9 +153,11 @@ function butEdit() {
         },
         body: JSON.stringify(user)
 
-    })
-    $("#editModal .close").click();
-    reTable();
+    });
+    if (response.ok) {
+        $('#editModal').modal('hide');
+        reTable();
+    }
 }
 
 //------------------select-ROLE--------------------------------
@@ -191,7 +175,7 @@ function selectRole(r) {
 //------------------DELETE--------------------------------
 
 function butDelete() {
-    fetch("http://localhost:8080/admin//users/" + document.getElementById('delId').value, {
+    fetch("http://localhost:8080/admin/users/" + document.getElementById('delId').value, {
         method: 'DELETE',
         headers: {
             'Accept': 'application/json',
@@ -212,3 +196,7 @@ function reTable() {
     }
     setTimeout(getUsers, 140)
 }
+
+
+
+

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+          crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+            integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+            crossorigin="anonymous"></script>
+</head>
+
+<body>
+<div class="row-fluid">
+    <div>
+        <nav class="navbar navbar-flex fixed-top bg-dark text-light">
+            <h3>
+                <b>
+                    <span class="font-weight-bold" th:text="${user.getEmail()}"></span>
+                </b>
+                <span> with roles:</span>
+                <td><span th:each="role:${user.getRoles()}"><span th:text="${role.getName() == 'ROLE_ADMIN'} ? 'ADMIN' : 'USER'"></span></span></td>
+            </h3>
+            <span class="navbar-text">
+            <form th:method="POST" th:action="@{/logout}" style="outline: none !important">
+                <input type="submit" value="Logout" style="color: darkgrey; background: none; border: none">
+            </form>
+            </span>
+        </nav>
+    </div>
+</div>
+<div class="row">
+    <div class="col-2">
+        <br>
+        <br>
+        <br>
+        <br>
+        <div class="list-group border-0">
+            <a data-toggle="tab" id="userPageLeftNavButton" href="#userPage"
+               class="active list-group-item list-group-item-action border-0">User</a>
+        </div>
+    </div>
+    <div class="col-10">
+        <br>
+        <br>
+        <br>
+        <br>
+
+        <div class="tab-content">
+            <br>
+            <div class="container" id="userPage">
+                <h1 class="font-weight">User information page</h1>
+                <div class="tab-content" style="padding-left: 0;">
+                    <div class="container active" style="padding-left: 0;">
+                        <div>
+                            <br>
+                            <h4>About user</h4>
+                            <table id="currentUserTable" class="table table-striped">
+                                <thead class="bg-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Username</th>
+                                    <th>Name</th>
+                                    <th>Surname</th>
+                                    <th>Age</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                </tr>
+                                </thead>
+                                <tbody id="currentUserTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-2">
+    </div>
+</div>
+<script src="/user.js"></script>
+</body>
+</html>
